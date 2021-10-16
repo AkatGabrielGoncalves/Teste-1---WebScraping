@@ -1,0 +1,14 @@
+{
+  "name": "webScrapper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:AkatGabrielGoncalves/webScrapper.git",
+  "author": "AkatGabrielGoncalves <gabrielmatheus9a@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.23.0"
+  },
+  "scripts": {
+    "run": "node scrapper.js"
+  }
+}
