@@ -2,8 +2,6 @@ const axios = require('axios').default
 const fs = require('fs')
 const path = require('path')
 
-const hrefRegex = /href="(?<href>.*?)"/
-
 const getUrl = async (url, regex) => {
   try {
     const { data } = await axios.get(url, { responseType: 'text' })
@@ -55,6 +53,6 @@ const scrapper = async () => {
   console.log('Saved as', filename)
 
   return filename
-}
+};
 
-scrapper().then()
+(async () => await scrapper())()
