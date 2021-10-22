@@ -4,6 +4,7 @@ const path = require('path')
 
 const getUrl = async (url, regex) => {
   try {
+    console.log(`Acessing: ${url}`)
     const { data } = await axios.get(url, { responseType: 'text' })
   
     //remove all whitespaces, tabs, newlines
@@ -14,6 +15,8 @@ const getUrl = async (url, regex) => {
 
     if (!href) throw new Error('Failed to get url href.')
 
+    console.log(`Next link found.`)
+
     return href
   } catch(err) {
     console.log('Failed to get.', err)
@@ -22,6 +25,7 @@ const getUrl = async (url, regex) => {
 
 const downloadAndSavePdf = async (tissPdfUrl) => {
   try {
+    console.log(`Trying to download: ${tissPdfUrl}`)
     const response = await axios.get(tissPdfUrl, { responseType: 'stream' })
 
     //get our filename
@@ -30,9 +34,17 @@ const downloadAndSavePdf = async (tissPdfUrl) => {
     const downloadLocation = path.resolve(__dirname, filename)
   
     const writeStream = fs.createWriteStream(downloadLocation)
+
+    writeStream.on('finish', () => {
+      console.log('Download Succeded.')
+    })
+
+    writeStream.on('error', () => {
+      console.log('Download Failed.')
+    })
   
-    await response.data.pipe(writeStream)
-    console.log('Download Succeded.')
+    response.data.pipe(writeStream)
+
     return filename
   } catch (err) {
     console.log('Download Failed.', err)
@@ -49,8 +61,6 @@ const scrapper = async () => {
   const latestTissUrl = await getUrl(tissUrl, latestTissUrlRegex)
   const tissPdfUrl = await getUrl(latestTissUrl, tissPdfUrlRegex)
   const filename = await downloadAndSavePdf(tissPdfUrl)
-
-  console.log('Saved as', filename)
 
   return filename
 };
